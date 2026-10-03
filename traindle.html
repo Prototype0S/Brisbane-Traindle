@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Brisbane Traindle</title>
+<style>
+  :root {
+    --bg: #f5f1e8;
+    --panel: #ffffff;
+    --ink: #1c1c1c;
+    --muted: #8a8a8a;
+    --line: #d8d2c4;
+    --green: #6aaa64;
+    --yellow: #d4a72c;
+    --red: #c0392b;
+    --accent: #e8842c;
+    --bg-image: none;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    background-image: var(--bg-image);
+    background-size: cover;
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+  }
+  body { display: flex; justify-content: center; min-height: 100vh; }
+  .app {
+    width: 100%; max-width: 480px;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    background: rgba(255,255,255,0.92);
+  }
+  header {
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 8px;
+  }
+  header .icon {
+    background: var(--accent); color: white;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px;
+  }
+  .scope-note {
+    padding: 6px 16px 8px 16px;
+    font-size: 10px;
+    color: var(--muted);
+    background: rgba(255,255,255,0.6);
+    border-bottom: 1px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+
+  /* Difficulty toggle */
+  .difficulty-bar {
+    display: flex;
+    gap: 0;
+    padding: 10px 16px 10px 16px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,0.6);
+    align-items: center;
+    justify-content: space-between;
+  }
+  .difficulty-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .toggle {
+    display: inline-flex;
+    background: #e8e3d5;
+    border-radius: 8px;
+    padding: 3px;
+  }
+  .toggle button {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b6b6b;
+    padding: 5px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .toggle button.active {
+    background: white;
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  /* Last Guess block */
+  .last-guess {
+    padding: 14px 16px 12px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .lg-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .lg-top .right { display: flex; gap: 24px; }
+  .lg-top .right span { display: inline-block; min-width: 44px; text-align: center; }
+  .lg-name {
+    font-size: 24px; font-weight: 500; margin: 2px 0 10px 0;
+    line-height: 1.15;
+    word-break: break-word;
+  }
+  .lg-row {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 40px; height: 40px; padding: 0 10px;
+    border-radius: 8px; border: 3px solid var(--line);
+    background: white; font-weight: 700; font-size: 16px;
+    color: var(--ink);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .chip.green { border-color: var(--green); background: #eaf5e8; color: #2e6b28; }
+  .chip.yellow { border-color: var(--yellow); background: #faf3dc; color: #8a6a10; }
+  .chip.red { border-color: var(--red); background: #f9e5e2; color: #8a2015; }
+  .lg-arrow { font-size: 22px; font-weight: 500; }
+  .lg-stops { font-size: 20px; font-weight: 500; }
+
+  /* History */
+  .history {
+    flex: 1;
+    padding: 12px 16px;
+    overflow-y: auto;
+  }
+  .history-title {
+    font-size: 11px; color: var(--muted);
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+  }
+  .hist-item {
+    padding: 10px 0 12px 0;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    user-select: none;
+  }
+  .hist-item:last-child { border-bottom: none; }
+  .hist-item:hover { background: rgba(0,0,0,0.02); }
+  .hist-collapsed .hist-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .hist-name { font-size: 15px; font-weight: 400; }
+  .hist-right { display: flex; gap: 24px; font-size: 15px; }
+  .hist-right .arrow { min-width: 44px; text-align: center; }
+  .hist-right .stops { min-width: 44px; text-align: right; }
+  .hist-bars {
+    display: flex; gap: 2px; margin-top: 6px; height: 5px;
+  }
+  .hist-bar { flex: 1; max-width: 44px; border-radius: 2px; }
+  .hist-bar.green { background: var(--green); }
+  .hist-bar.yellow { background: var(--yellow); }
+  .hist-bar.red { background: var(--red); }
+
+  /* Expanded history card */
+  .hist-expanded { padding: 4px 0 4px 0; }
+  .hist-expanded .lg-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .hist-expanded .lg-top .right { display: flex; gap: 24px; }
+  .hist-expanded .lg-top .right span { display: inline-block; min-width: 44px; text-align: center; }
+  .hist-expanded .lg-name {
+    font-size: 22px; font-weight: 500; margin: 2px 0 10px 0;
+    line-height: 1.15;
+  }
+  .hist-expanded .lg-row {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .hist-expanded .lg-arrow { font-size: 20px; font-weight: 500; }
+  .hist-expanded .lg-stops { font-size: 18px; font-weight: 500; }
+
+  /* Input area */
+  .input-area {
+    border-top: 1px solid var(--line);
+    padding: 12px 16px 16px 16px;
+    background: rgba(255,255,255,0.98);
+    position: relative;
+  }
+  .input-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .next-btn {
+    background: #e0dccf; color: #4a4a4a;
+    border: none; border-radius: 4px;
+    padding: 4px 10px; font-size: 11px; font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+  .next-btn:disabled { opacity: 0.5; cursor: default; }
+  .guesses-left {
+    font-size: 11px; color: var(--muted);
+    text-align: right;
+  }
+  .guesses-left .num {
+    display: block; font-size: 32px; font-weight: 400;
+    color: var(--accent); line-height: 1;
+    margin-top: 2px;
+  }
+  .input-wrap { position: relative; }
+  #station-input {
+    width: 100%; border: none;
+    border-bottom: 2px solid var(--line);
+    background: transparent;
+    font-size: 20px; font-weight: 300;
+    padding: 6px 0 6px 0;
+    color: var(--ink);
+    outline: none;
+    font-family: inherit;
+  }
+  #station-input::placeholder { color: #b8b2a5; font-weight: 300; }
+  #station-input:focus { border-bottom-color: var(--ink); }
+  .suggestions {
+    position: absolute; left: 0; right: 0;
+    top: 100%;
+    background: rgba(255,255,255,0.98);
+    border: 1px solid var(--line);
+    border-top: none;
+    max-height: 240px; overflow-y: auto;
+    z-index: 20;
+    display: none;
+  }
+  .suggestions.open { display: block; }
+  .suggestion {
+    padding: 10px 14px;
+    font-size: 16px;
+    color: #6b6b6b;
+    cursor: pointer;
+  }
+  .suggestion:hover, .suggestion.active {
+    background: #f0ece0;
+    color: var(--ink);
+  }
+
+  /* Footer */
+  footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 16px 14px 16px;
+    border-top: 1px solid var(--line);
+    background: rgba(255,255,255,0.98);
+  }
+  .foot-btn {
+    background: none; border: none;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 2px; cursor: pointer;
+    color: var(--ink);
+    font-size: 11px;
+    font-family: inherit;
+    padding: 4px 8px;
+    min-width: 60px;
+  }
+  .foot-btn .ico {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--accent); color: white;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 17px;
+  }
+  .foot-btn.center {
+    background: var(--accent); color: white;
+    border-radius: 22px;
+    padding: 10px 24px;
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 160px;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .foot-btn.center:hover { filter: brightness(1.05); }
+
+  /* Modals */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100;
+    padding: 0;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: white; border-radius: 12px;
+    padding: 20px; max-width: 100%;
+    max-height: 90vh; overflow: auto;
+    width: 480px;
+    margin: 16px;
+  }
+  .modal h2 { margin: 0 0 12px 0; font-size: 18px; }
+  .modal h3 { margin: 16px 0 6px 0; font-size: 14px; color: #333; }
+  .modal p { font-size: 14px; line-height: 1.5; color: #444; }
+  .modal ul { font-size: 14px; line-height: 1.6; padding-left: 20px; margin: 8px 0; }
+  .modal li { margin-bottom: 4px; }
+  .modal button.close {
+    margin-top: 12px; padding: 10px 20px;
+    border: none; border-radius: 6px;
+    background: var(--accent); color: white;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .example-row {
+    display: flex; gap: 6px; margin: 6px 0 10px 0; align-items: center;
+  }
+  .example-row .chip {
+    min-width: 32px; height: 32px;
+    font-size: 13px;
+    animation: none;
+    border-width: 2px;
+  }
+  .example-label {
+    font-size: 12px; color: #888; margin-left: 8px;
+  }
+
+  /* Map modal */
+  .map-modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.95);
+    display: none;
+    z-index: 150;
+    overflow: hidden;
+    touch-action: none;
+  }
+  .map-modal-bg.open { display: block; }
+  .map-viewport {
+    position: absolute; inset: 0;
+    overflow: hidden;
+    cursor: grab;
+    touch-action: none;
+  }
+  .map-viewport.dragging { cursor: grabbing; }
+  .map-viewport img {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform-origin: center center;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+    max-width: none;
+  }
+  .map-controls {
+    position: absolute;
+    bottom: 20px; right: 20px;
+    display: flex; flex-direction: column; gap: 8px;
+    z-index: 10;
+  }
+  .map-controls button {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.92);
+    color: #222;
+    font-size: 20px; font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .map-controls button:active { background: #ddd; }
+  .map-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.92);
+    color: #222;
+    font-size: 22px; font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .map-hint {
+    position: absolute;
+    top: 20px; left: 20px;
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .map-missing {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    text-align: center;
+    padding: 40px;
+    line-height: 1.6;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: white;
+    padding: 10px 20px; border-radius: 20px;
+    font-size: 14px; font-weight: 600;
+    z-index: 400;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+    max-width: 90vw;
+    text-align: center;
+  }
+  .toast.show { opacity: 1; }
+  .toast.win { background: var(--green); }
+  .toast.lose { background: var(--red); }
+
+  .empty-hist {
+    color: var(--muted); font-size: 14px; font-style: italic;
+    padding: 8px 0;
+  }
+
+  /* ---------- ANIMATIONS ---------- */
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hist-item { animation: cardIn 0.25s ease-out; }
+
+  @keyframes chipPop {
+    0%   { transform: scale(0.7); opacity: 0; }
+    60%  { transform: scale(1.08); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .chip { animation: chipPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+  @keyframes winPulse {
+    0%   { transform: scale(1);    color: var(--ink); }
+    40%  { transform: scale(1.05); color: var(--green); }
+    100% { transform: scale(1);    color: var(--green); }
+  }
+  .lg-name.win { animation: winPulse 0.6s ease-out forwards; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-6px); }
+    40%      { transform: translateX(6px); }
+    60%      { transform: translateX(-4px); }
+    80%      { transform: translateX(4px); }
+  }
+  .input-wrap.shake { animation: shake 0.4s; }
+
+  .foot-btn:active, .next-btn:active { transform: scale(0.96); }
+  .chip { transition: transform 0.15s; }
+  .chip:hover { transform: translateY(-1px); }
+
+  /* ---------- WIN MODAL ---------- */
+  .win-modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none; align-items: center; justify-content: center;
+    z-index: 300;
+    padding: 20px;
+  }
+  .win-modal-bg.open { display: flex; animation: fadeIn 0.25s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .win-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 24px;
+    width: 100%; max-width: 340px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes popIn {
+    0%   { transform: scale(0.85); opacity: 0; }
+    60%  { transform: scale(1.03); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .win-emoji { font-size: 52px; line-height: 1; margin-bottom: 8px; }
+  .win-modal h2 { margin: 0 0 14px 0; font-size: 20px; color: var(--ink); }
+  .win-station {
+    font-size: 22px; font-weight: 600;
+    color: var(--green); margin-bottom: 12px;
+    word-break: break-word;
+  }
+  .win-lines {
+    display: flex; gap: 6px; justify-content: center;
+    margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .win-stats { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+  .win-play-again {
+    width: 100%;
+    padding: 12px;
+    border: none; border-radius: 10px;
+    background: var(--accent); color: white;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .win-play-again:active { transform: scale(0.98); }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <span class="icon">🚉</span>
+    <span>Brisbane Traindle</span>
+  </header>
+  <div class="scope-note">* Heavy rail lines T1–T6 only</div>
+
+  <div class="difficulty-bar">
+    <span class="difficulty-label">Difficulty</span>
+    <div class="toggle" id="difficulty-toggle">
+      <button data-mode="easy" class="active">Easy</button>
+      <button data-mode="hard">Hard</button>
+    </div>
+  </div>
+
+  <div class="last-guess" id="last-guess-block">
+    <div class="lg-top">
+      <span>Last Guess</span>
+      <span class="right">
+        <span>Direction</span>
+        <span>Stops</span>
+      </span>
+    </div>
+    <div class="lg-name" id="lg-name">—</div>
+    <div class="lg-row">
+      <div class="chips" id="lg-chips"></div>
+      <div style="display:flex; gap:24px; align-items:center;">
+        <span class="lg-arrow" id="lg-arrow" style="min-width:44px; text-align:center;">–</span>
+        <span class="lg-stops" id="lg-stops" style="min-width:44px; text-align:center;">–</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="history" id="history">
+    <div class="history-title">History</div>
+    <div id="history-list">
+      <div class="empty-hist">No guesses yet. Type a station name below.</div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-top">
+      <button class="next-btn" id="next-btn" disabled>Next Guess</button>
+      <div class="guesses-left">
+        Guesses
+        <span class="num" id="guesses-left">8</span>
+      </div>
+    </div>
+    <div class="input-wrap">
+      <input id="station-input" type="text" placeholder="Station Name" autocomplete="off" spellcheck="false">
+      <div class="suggestions" id="suggestions"></div>
+    </div>
+  </div>
+
+  <footer>
+    <button class="foot-btn" id="btn-map">
+      <span class="ico">📍</span>
+      <span>Map</span>
+    </button>
+    <button class="foot-btn center" id="btn-results">View Results</button>
+    <button class="foot-btn" id="btn-help">
+      <span class="ico">?</span>
+      <span>Help</span>
+    </button>
+  </footer>
+</div>
+
+<!-- Standard modal -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<!-- Map modal -->
+<div class="map-modal-bg" id="map-modal-bg">
+  <div class="map-hint">Pinch / scroll to zoom · drag to pan · double-tap to reset</div>
+  <button class="map-close" id="map-close">✕</button>
+  <div class="map-viewport" id="map-viewport">
+    <img id="map-img" alt="SEQ network map" src="seq-network-map.png"
+         onerror="document.getElementById('map-missing').style.display='flex'; this.style.display='none';">
+    <div class="map-missing" id="map-missing" style="display:none;">
+      Map image not found.<br>
+      Save the network map as <code>seq-network-map.png</code> next to this HTML file.
+    </div>
+  </div>
+  <div class="map-controls">
+    <button id="map-zoom-in" title="Zoom in">+</button>
+    <button id="map-zoom-out" title="Zoom out">−</button>
+    <button id="map-reset" title="Reset">⌂</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Win / Lose modal -->
+<div class="win-modal-bg" id="win-modal-bg">
+  <div class="win-modal">
+    <div class="win-emoji">🎉</div>
+    <h2>You got it!</h2>
+    <div class="win-station" id="win-station">—</div>
+    <div class="win-lines" id="win-lines"></div>
+    <div class="win-stats" id="win-stats"></div>
+    <button class="win-play-again" id="win-play-again">Play again</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   BRISBANE TRAINDLE — Phase 4
+   Difficulty: easy / hard
+   ============================================================ */
+
+const MAX_GUESSES = 8;
+let DIFFICULTY = 'easy'; // 'easy' or 'hard'
+const HELP_SEEN_KEY = 'traindle-seen-help';
+
+/* ---------- STATIONS ---------- */
+const STATIONS = [
+  {id:1,   name:"Boondall", x:506699.9205, y:6975188.5811, lines:["T4"]},
+  {id:2,   name:"Bowen Hills", x:503713.071, y:6964258.2858, lines:["T1","T2","T3","T4","T5","T6"]},
+  {id:3,   name:"Buranda", x:504005.2563, y:6958566.5591, lines:["T4"]},
+  {id:5,   name:"Dakabin", x:497601.8263, y:6988043.0835, lines:["T1"]},
+  {id:6,   name:"Domestic Airport", x:511756.837, y:6970908.0979, lines:["T5"]},
+  {id:7,   name:"Dutton Park", x:502806.0624, y:6958103.055, lines:["T6"]},
+  {id:8,   name:"Geebung", x:504671.1454, y:6972719.9022, lines:["T2"]},
+  {id:9,   name:"Glass House Mountains", x:495667.2957, y:7024708.3561, lines:["T1"]},
+  {id:10,  name:"Goodna", x:490302.0849, y:6946132.8687, lines:["T1"]},
+  {id:11,  name:"Gympie North", x:468265.8187, y:7106656.331, lines:["T1"]},
+  {id:12,  name:"International Airport", x:510735.4811, y:6968952.4664, lines:["T5"]},
+  {id:13,  name:"Karrabin", x:471290.3332, y:6946585.9553, lines:["T1"]},
+  {id:14,  name:"Laidley", x:440131.4336, y:6943830.9226, lines:[]},
+  {id:15,  name:"Lindum", x:514309.6762, y:6964596.938, lines:["T4"]},
+  {id:16,  name:"Milton", x:500513.8609, y:6961636.3856, lines:["T1","T2"]},
+  {id:17,  name:"Mitchelton", x:497635.0798, y:6967969.9442, lines:["T6"]},
+  {id:18,  name:"Mooloolah", x:496348.314, y:7039479.4597, lines:["T1"]},
+  {id:19,  name:"Narangba", x:496036.0422, y:6991158.8778, lines:["T1"]},
+  {id:20,  name:"Norman Park", x:506159.4933, y:6960212.5497, lines:["T4"]},
+  {id:21,  name:"North Boondall", x:506004.5124, y:6976050.2452, lines:["T4"]},
+  {id:22,  name:"Woolloongabba", x:503329.5304, y:6959835.431, lines:["T4","T5","T6"], underConstruction:true},
+  {id:24,  name:"Nundah", x:506132.254, y:6969176.1, lines:["T4"]},
+  {id:25,  name:"Oxford Park", x:496950.5836, y:6968766.5311, lines:["T6"]},
+  {id:26,  name:"Helensvale", x:533391.5649, y:6910997.8689, lines:["T5"]},
+  {id:27,  name:"Parkwood", x:534152.2399, y:6908072.2959, lines:["T5"]},
+  {id:28,  name:"Indooroopilly", x:497650.9883, y:6957931.9606, lines:["T1","T2"]},
+  {id:29,  name:"Kippa-Ring", x:508174.7189, y:6988604.2374, lines:["T2"]},
+  {id:30,  name:"Loganlea", x:513613.1832, y:6939262.7935, lines:["T5","T6"]},
+  {id:31,  name:"Lota", x:518631.6866, y:6961479.7512, lines:["T4"]},
+  {id:32,  name:"Manly", x:517809.8468, y:6962962.0382, lines:["T4"]},
+  {id:33,  name:"Varsity Lakes", x:539222.6142, y:6891978.8624, lines:["T5"]},
+  {id:34,  name:"Landsborough", x:496657.5013, y:7034812.1263, lines:["T1"]},
+  {id:35,  name:"Albert Street", x:502692.1417, y:6961311.2226, lines:["T4","T5","T6"], underConstruction:true},
+  {id:47,  name:"Gold Coast University Hospital", x:537460.0103, y:6907076.0881, lines:["T5"], tram:true},
+  {id:48,  name:"Griffith University", x:537838.2246, y:6906801.0073, lines:["T5"], tram:true},
+  {id:52,  name:"Walloon", x:467222.6828, y:6946247.8806, lines:["T1"]},
+  {id:53,  name:"Wooloowin", x:504286.0706, y:6967043.146, lines:["T3","T4","T5"]},
+  {id:54,  name:"Wynnum", x:516408.9396, y:6964844.4774, lines:["T4"]},
+  {id:55,  name:"Yandina", x:495838.365, y:7062188.6819, lines:["T1"]},
+  {id:56,  name:"Caboolture", x:495408.02, y:7004393.8829, lines:["T1"]},
+  {id:57,  name:"Cannon Hill", x:508781.5636, y:6962022.3227, lines:["T4"]},
+  {id:58,  name:"Chelmer", x:497312.0469, y:6956852.9072, lines:["T1","T2"]},
+  {id:59,  name:"Coopers Plains", x:503550.5342, y:6950709.3965, lines:["T6"]},
+  {id:60,  name:"Coorparoo", x:505458.3822, y:6959312.7343, lines:["T4"]},
+  {id:61,  name:"Ormiston", x:525262.9043, y:6956543.8065, lines:["T4"]},
+  {id:62,  name:"Ormeau", x:527814.4657, y:6925018.7884, lines:["T5"]},
+  {id:63,  name:"Woombye", x:496295.1334, y:7051163.9957, lines:["T1"]},
+  {id:64,  name:"Springfield Central", x:490416.3209, y:6938867.3658, lines:["T2"]},
+  {id:65,  name:"Dinmore", x:483573.3092, y:6947514.1008, lines:["T1"]},
+  {id:66,  name:"East Ipswich", x:477798.4569, y:6945980.9394, lines:["T1"]},
+  {id:67,  name:"Edens Landing", x:516850.5195, y:6936225.7878, lines:["T6"]},
+  {id:68,  name:"Gailes", x:492013.1379, y:6946855.6021, lines:["T1"]},
+  {id:69,  name:"Grovely", x:496301.6314, y:6968767.627, lines:["T6"]},
+  {id:70,  name:"Hemmant", x:512593.5684, y:6964004.9395, lines:["T4"]},
+  {id:71,  name:"Ipswich", x:476385.3761, y:6945651.8469, lines:["T1"]},
+  {id:72,  name:"Keperra", x:495718.6501, y:6968247.7808, lines:["T6"]},
+  {id:73,  name:"Lawnton", x:498110.0783, y:6982381.8958, lines:["T2"]},
+  {id:74,  name:"Murarrie", x:510431.0413, y:6962079.5165, lines:["T4"]},
+  {id:75,  name:"Northgate", x:506844.5401, y:6970050.1077, lines:["T1","T2","T4"]},
+  {id:76,  name:"Nudgee", x:508249.4629, y:6973011.9972, lines:["T4"]},
+  {id:77,  name:"Oxley", x:497407.2585, y:6952400.1243, lines:["T1","T2"]},
+  {id:78,  name:"Pomona", x:485703.7032, y:7083764.8177, lines:["T1"]},
+  {id:79,  name:"Redbank", x:487404.1091, y:6947158.4898, lines:["T1"]},
+  {id:80,  name:"Riverview", x:485228.2112, y:6947660.2708, lines:["T1"]},
+  {id:81,  name:"Rocklea", x:501400.8189, y:6953227.9212, lines:["T6"]},
+  {id:82,  name:"Runcorn", x:506790.7461, y:6947919.2079, lines:["T6"]},
+  {id:83,  name:"Sandgate", x:506841.8604, y:6977874.2114, lines:["T4"]},
+  {id:84,  name:"South Bank", x:502281.3301, y:6960193.6138, lines:["T4","T5","T6"]},
+  {id:85,  name:"Thagoona", x:463477.5117, y:6944081.9114, lines:["T1"]},
+  {id:86,  name:"Toombul", x:505816.5226, y:6968405.2135, lines:["T4"]},
+  {id:87,  name:"Exhibition", x:503073.0365, y:6963723.1345, lines:["T1","T2","T3","T4","T5","T6"]},
+  {id:89,  name:"Toowong", x:499319.1685, y:6959814.7629, lines:["T1","T2"]},
+  {id:90,  name:"Trinder Park", x:509657.8567, y:6943583.9905, lines:["T6"]},
+  {id:91,  name:"Virginia", x:506170.5069, y:6971234.8783, lines:["T2"]},
+  {id:92,  name:"Wellington Point", x:523904.7224, y:6958782.9421, lines:["T4"]},
+  {id:93,  name:"Wulkuraka", x:473634.0149, y:6945571.44, lines:["T1"]},
+  {id:94,  name:"Wynnum North", x:515682.076, y:6965121.0137, lines:["T4"]},
+  {id:95,  name:"Beerwah", x:495867.345, y:7029389.5261, lines:["T1"]},
+  {id:96,  name:"Booval", x:479223.3002, y:6946052.4587, lines:["T1"]},
+  {id:97,  name:"Fortitude Valley", x:503353.6307, y:6963076.18, lines:["T1","T2","T3","T4","T5","T6"]},
+  {id:98,  name:"Moorooka", x:501374.175, y:6954231.8124, lines:["T6"]},
+  {id:99,  name:"Morayfield", x:495303.7771, y:7001352.6307, lines:["T1"]},
+  {id:100, name:"Rosewood", x:459815.7736, y:6942261.5934, lines:["T1"]},
+  {id:101, name:"Sherwood", x:497973.9518, y:6954747.7883, lines:["T1","T2"]},
+  {id:102, name:"South Brisbane", x:501834.4222, y:6960940.1461, lines:["T4","T5","T6"]},
+  {id:103, name:"Strathpine", x:498961.2208, y:6979115.9022, lines:["T2"]},
+  {id:104, name:"Sunnybank", x:505348.9683, y:6949229.9843, lines:["T6"]},
+  {id:105, name:"Nerang", x:534425.4912, y:6903399.6728, lines:["T5"]},
+  {id:106, name:"Newmarket", x:501047.7739, y:6965636.5115, lines:["T6"]},
+  {id:107, name:"Elimbah", x:494628.3168, y:7012346.8033, lines:["T1"]},
+  {id:108, name:"Eumundi", x:495522.7069, y:7071102.9828, lines:["T1"]},
+  {id:109, name:"Ferny Grove", x:493615.2991, y:6969090.4606, lines:["T6"]},
+  {id:111, name:"Hendra", x:506186.4275, y:6966812.3868, lines:["T3"]},
+  {id:112, name:"Darra", x:495299.7935, y:6950887.1791, lines:["T1","T2"]},
+  {id:113, name:"Richlands", x:494755.0906, y:6947526.5492, lines:["T2"]},
+  {id:114, name:"Springfield", x:492316.8666, y:6940458.3712, lines:["T2"]},
+  {id:115, name:"Murrumba Downs", x:501171.1341, y:6985616.6641, lines:["T2"]},
+  {id:116, name:"Mango Hill", x:502735.662, y:6986272.5783, lines:["T2"]},
+  {id:117, name:"Mango Hill East", x:503573.3057, y:6987719.6498, lines:["T2"]},
+  {id:118, name:"Rothwell", x:504792.3699, y:6988766.0581, lines:["T2"]},
+  {id:119, name:"Kallangur", x:500028.3604, y:6985146.1973, lines:["T2"]},
+  {id:120, name:"Bald Hills", x:501084.8394, y:6978026.3662, lines:["T2"]},
+  {id:121, name:"Yeerongpilly", x:501398.0267, y:6955428.6303, lines:["T6"]},
+  {id:122, name:"Alderley", x:500083.2242, y:6966688.4449, lines:["T6"]},
+  {id:123, name:"Banoon", x:504608.988, y:6949691.3041, lines:["T6"]},
+  {id:124, name:"Beenleigh", x:520182.2289, y:6934067.0993, lines:["T5","T6"]},
+  {id:125, name:"Bethania", x:515645.7397, y:6937305.0305, lines:["T6"]},
+  {id:126, name:"Burpengary", x:495765.6386, y:6995613.3079, lines:["T1"]},
+  {id:127, name:"Carseldine", x:502851.2392, y:6975103.7853, lines:["T2"]},
+  {id:128, name:"Cooran", x:482303.8965, y:7087313.3287, lines:["T1"]},
+  {id:129, name:"Eagle Junction", x:504910.8696, y:6967554.1521, lines:["T1","T2","T3","T4","T5"]},
+  {id:130, name:"Bray Park", x:498631.5584, y:6980381.5151, lines:["T2"]},
+  {id:131, name:"Bundamba", x:480743.8508, y:6946263.8648, lines:["T1"]},
+  {id:132, name:"Central", x:502561.7703, y:6961984.6008, lines:["T1","T2","T3","T4","T5","T6"]},
+  {id:133, name:"Clayfield", x:505702.4017, y:6967247.543, lines:["T3"]},
+  {id:134, name:"Corinda", x:498035.3654, y:6953860.8261, lines:["T1","T2"]},
+  {id:135, name:"Deagon", x:506255.5786, y:6977254.4633, lines:["T4"]},
+  {id:136, name:"Doomben", x:507368.3086, y:6965782.8849, lines:["T3"]},
+  {id:137, name:"Ebbw Vale", x:482438.3152, y:6946721.5728, lines:["T1"]},
+  {id:138, name:"The Workshops Rail Museum", x:476289.3589, y:6947230.5731, lines:["T1"]},
+  {id:139, name:"Enoggera", x:499252.544, y:6967016.0125, lines:["T6"]},
+  {id:140, name:"Eudlo", x:495706.7905, y:7043930.1239, lines:["T1"]},
+  {id:141, name:"Fairfield", x:502757.7843, y:6957100.8997, lines:["T6"]},
+  {id:142, name:"Fruitgrove", x:507868.4843, y:6947299.7513, lines:["T6"]},
+  {id:143, name:"Gatton", x:428684.6895, y:6951940.6, lines:[]},
+  {id:144, name:"Gaythorne", x:498521.7297, y:6967127.4322, lines:["T6"]},
+  {id:145, name:"Graceville", x:497616.467, y:6955907.2384, lines:["T1","T2"]},
+  {id:146, name:"Helensvale", x:533362.029, y:6911008.9729, lines:["T5"]},
+  {id:147, name:"Holmview", x:518493.2674, y:6934960.2779, lines:["T6"]},
+  {id:148, name:"Kuraby", x:509027.2333, y:6946553.9177, lines:["T6"]},
+  {id:149, name:"Morningside", x:506865.811, y:6961405.6872, lines:["T4"]},
+  {id:150, name:"Boggo Road", x:503041.7807, y:6958894.928, lines:["T4","T5","T6"]},
+  {id:151, name:"Ascot", x:506268.4401, y:6965985.2555, lines:["T3"]},
+  {id:152, name:"Auchenflower", x:499674.1787, y:6960788.0855, lines:["T1","T2"]},
+  {id:153, name:"Banyo", x:507654.7842, y:6972069.9356, lines:["T4"]},
+  {id:154, name:"Beerburrum", x:495954.1557, y:7018013.5109, lines:["T1"]},
+  {id:155, name:"Bindha", x:507184.8922, y:6971148.8175, lines:["T4"]},
+  {id:156, name:"Birkdale", x:521606.3202, y:6958824.3156, lines:["T4"]},
+  {id:157, name:"Petrie", x:498212.0493, y:6983851.577, lines:["T1"]},
+  {id:158, name:"Salisbury", x:502240.2564, y:6952218.2576, lines:["T6"]},
+  {id:159, name:"Sunshine", x:505565.8959, y:6971948.7715, lines:["T2"]},
+  {id:160, name:"Taringa", x:498186.5216, y:6958940.4197, lines:["T1","T2"]},
+  {id:161, name:"Thomas Street", x:474886.1255, y:6945445.8661, lines:["T1"]},
+  {id:162, name:"Wilston", x:501902.3698, y:6965254.3767, lines:["T6"]},
+  {id:163, name:"Windsor", x:502868.3027, y:6965349.9466, lines:["T6"]},
+  {id:164, name:"Albion", x:503982.6869, y:6966030.3489, lines:["T3","T4","T5"]},
+  {id:165, name:"Altandi", x:506291.8872, y:6949008.0533, lines:["T5","T6"]},
+  {id:166, name:"Roma Street", x:501900.1984, y:6962079.0387, lines:["T1","T2","T3","T4","T5","T6"]},
+  {id:167, name:"Kingston", x:511673.0822, y:6940755.0532, lines:["T6"]},
+  {id:168, name:"Nambour", x:495838.7988, y:7055066.8851, lines:["T1"]},
+  {id:169, name:"Robina", x:537147.3739, y:6894842.7582, lines:["T5"]},
+  {id:170, name:"Shorncliffe", x:507955.8696, y:6977332.7921, lines:["T4"]},
+  {id:171, name:"Thorneside", x:519042.0282, y:6959714.3752, lines:["T4"]},
+  {id:172, name:"Traveston", x:478337.0226, y:7088875.042, lines:["T1"]},
+  {id:173, name:"Wacol", x:492527.0222, y:6948308.4217, lines:["T1"]},
+  {id:174, name:"Wynnum Central", x:516830.2618, y:6964212.5374, lines:["T4"]},
+  {id:175, name:"Yeronga", x:501660.3925, y:6956180.2332, lines:["T6"]},
+  {id:176, name:"Zillmere", x:503632.4372, y:6973820.1483, lines:["T2"]},
+  {id:177, name:"Cleveland", x:526278.9788, y:6955473.97, lines:["T4"]},
+  {id:179, name:"Woodridge", x:510231.9857, y:6942887.3361, lines:["T6"]},
+  {id:180, name:"Palmwoods", x:496091.1577, y:7048045.5585, lines:["T1"]},
+  {id:181, name:"Pimpama", x:529203.4006, y:6923124.3355, lines:["T5"]},
+  {id:190, name:"Hope Island", x:532610.4347, y:6916061.1281, lines:["T5"]},
+  {id:191, name:"Merrimac", x:535682.9545, y:6897318.6045, lines:["T5"], underConstruction:true},
+];
+
+/* ---------- LINE GRAPH ---------- */
+const LINE_ORDER = {
+  T1: ["Gympie North","Traveston","Cooran","Pomona","Cooroy","Eumundi","Yandina","Nambour","Woombye","Palmwoods","Eudlo","Mooloolah","Landsborough","Beerwah","Glass House Mountains","Beerburrum","Elimbah","Caboolture","Morayfield","Burpengary","Narangba","Dakabin","Petrie","Northgate","Eagle Junction","Bowen Hills","Fortitude Valley","Central","Roma Street","Milton","Auchenflower","Toowong","Taringa","Indooroopilly","Chelmer","Graceville","Sherwood","Corinda","Oxley","Darra","Wacol","Gailes","Goodna","Redbank","Riverview","Dinmore","Ebbw Vale","Bundamba","Booval","East Ipswich","Ipswich","Thomas Street","Wulkuraka","Karrabin","Walloon","Thagoona","Rosewood"],
+  T2: ["Kippa-Ring","Rothwell","Mango Hill East","Mango Hill","Murrumba Downs","Kallangur","Lawnton","Bray Park","Strathpine","Bald Hills","Carseldine","Zillmere","Geebung","Sunshine","Virginia","Northgate","Eagle Junction","Bowen Hills","Fortitude Valley","Central","Roma Street","Milton","Auchenflower","Toowong","Taringa","Indooroopilly","Chelmer","Graceville","Sherwood","Corinda","Oxley","Darra","Richlands","Springfield","Springfield Central"],
+  T3: ["Doomben","Ascot","Hendra","Clayfield","Eagle Junction","Wooloowin","Albion","Bowen Hills","Fortitude Valley","Central","Roma Street"],
+  T4: ["Shorncliffe","Sandgate","Deagon","North Boondall","Boondall","Nudgee","Banyo","Bindha","Northgate","Nundah","Toombul","Eagle Junction","Wooloowin","Albion","Bowen Hills","Fortitude Valley","Central","Roma Street","South Brisbane","South Bank","Boggo Road","Buranda","Coorparoo","Norman Park","Morningside","Cannon Hill","Murarrie","Hemmant","Lindum","Wynnum North","Wynnum","Wynnum Central","Manly","Lota","Thorneside","Birkdale","Wellington Point","Ormiston","Cleveland"],
+  T5: ["Domestic Airport","International Airport","Eagle Junction","Wooloowin","Albion","Bowen Hills","Fortitude Valley","Central","Roma Street","South Brisbane","South Bank","Boggo Road","Altandi","Loganlea","Beenleigh","Ormeau","Pimpama","Coomera","Hope Island","Helensvale","Nerang","Robina","Varsity Lakes"],
+  T6: ["Ferny Grove","Keperra","Grovely","Oxford Park","Mitchelton","Gaythorne","Enoggera","Alderley","Newmarket","Wilston","Windsor","Bowen Hills","Fortitude Valley","Central","Roma Street","South Brisbane","South Bank","Boggo Road","Dutton Park","Fairfield","Yeronga","Yeerongpilly","Moorooka","Rocklea","Salisbury","Coopers Plains","Banoon","Sunnybank","Altandi","Runcorn","Fruitgrove","Kuraby","Trinder Park","Woodridge","Kingston","Loganlea","Bethania","Edens Landing","Holmview","Beenleigh"]
+};
+
+/* ---------- NORMALISE ---------- */
+function norm(name) {
+  if (!name) return "";
+  return name.trim()
+    .replace(/\s+/g, " ")
+    .replace(/Brisbane Central/i, "Central")
+    .replace(/Boggo Road\/Park Road/i, "Boggo Road")
+    .replace(/Park Road/i, "Boggo Road");
+}
+
+/* ---------- INDEX & ADJACENCY ---------- */
+const stationByName = {};
+STATIONS.forEach(s => { stationByName[norm(s.name).toLowerCase()] = s; });
+
+const adjacency = {};
+function addEdge(a, b) {
+  a = norm(a); b = norm(b);
+  if (!a || !b || a === b) return;
+  if (!adjacency[a]) adjacency[a] = new Set();
+  if (!adjacency[b]) adjacency[b] = new Set();
+  adjacency[a].add(b);
+  adjacency[b].add(a);
+}
+Object.values(LINE_ORDER).forEach(seq => {
+  const valid = seq.filter(n => stationByName[norm(n).toLowerCase()]);
+  for (let i = 0; i < valid.length - 1; i++) addEdge(valid[i], valid[i+1]);
+});
+
+/* ---------- DIRECTION ---------- */
+function direction8(from, to) {
+  const dx = to.x - from.x, dy = to.y - from.y;
+  const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+  const dirs = [
+    {min:-22.5, max:22.5, arrow:"→"},
+    {min:22.5, max:67.5, arrow:"↗"},
+    {min:67.5, max:112.5, arrow:"↑"},
+    {min:112.5, max:157.5, arrow:"↖"},
+    {min:157.5, max:180, arrow:"←"},
+    {min:-180, max:-157.5, arrow:"←"},
+    {min:-157.5, max:-112.5, arrow:"↙"},
+    {min:-112.5, max:-67.5, arrow:"↓"},
+    {min:-67.5, max:-22.5, arrow:"↘"},
+  ];
+  for (const d of dirs) if (angle >= d.min && angle <= d.max) return d.arrow;
+  return "?";
+}
+
+/* ---------- STOPS ---------- */
+function stopsBetween(fromName, toName) {
+  fromName = norm(fromName); toName = norm(toName);
+  if (fromName === toName) return 0;
+  if (!adjacency[fromName] || !adjacency[toName]) return null;
+  const q = [[fromName, 0]];
+  const seen = new Set([fromName]);
+  while (q.length) {
+    const [cur, d] = q.shift();
+    if (cur === toName) return d;
+    for (const nb of adjacency[cur]) {
+      if (!seen.has(nb)) { seen.add(nb); q.push([nb, d+1]); }
+    }
+  }
+  return null;
+}
+
+function bucketStops(n) {
+  if (n === null) return "?";
+  if (n === 0) return "0";
+  if (n < 10) return String(n);
+  const lo = Math.floor(n/10)*10;
+  return `${lo}-${lo+10}`;
+}
+
+/* ---------- STATE ---------- */
+let answer = null;
+let guesses = [];
+let gameOver = false;
+let expandedId = null;
+
+function pickRandomStation() {
+  const pool = STATIONS.filter(s =>
+    !s.tram && !s.underConstruction && s.lines.length > 0
+  );
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function newGame() {
+  document.getElementById("lg-name").classList.remove("win");
+  answer = pickRandomStation();
+  guesses = [];
+  gameOver = false;
+  expandedId = null;
+  document.getElementById("history-list").innerHTML =
+    '<div class="empty-hist">No guesses yet. Type a station name below.</div>';
+  document.getElementById("lg-name").textContent = "—";
+  document.getElementById("lg-chips").innerHTML = "";
+  document.getElementById("lg-arrow").textContent = "–";
+  document.getElementById("lg-stops").textContent = "–";
+  document.getElementById("guesses-left").textContent = MAX_GUESSES;
+  document.getElementById("next-btn").disabled = true;
+  const inp = document.getElementById("station-input");
+  inp.value = "";
+  inp.disabled = false;
+  inp.focus();
+}
+
+/* ---------- FEEDBACK ---------- */
+function lineFeedback(guess, answer) {
+  const gLines = guess.lines.filter(l => l !== "CRR");
+  const aLines = answer.lines.filter(l => l !== "CRR");
+  const isWin = guess.id === answer.id;
+  const overlaps = gLines.filter(l => aLines.includes(l));
+  const anyOverlap = overlaps.length > 0;
+
+  if (DIFFICULTY === 'easy') {
+    return gLines.map(l => {
+      if (aLines.includes(l)) return { line: l, state: "green" };
+      if (anyOverlap) return { line: l, state: "yellow" };
+      return { line: l, state: "red" };
+    });
+  }
+
+  // Hard mode
+  if (isWin) {
+    return gLines.map(l => ({ line: l, state: "green" }));
+  }
+  if (!anyOverlap) {
+    return gLines.map(l => ({ line: l, state: "red" }));
+  }
+  if (gLines.length === 1) {
+    // Only one guessed line, and it matches → green (you've pinned it)
+    return gLines.map(l => ({ line: l, state: "green" }));
+  }
+  // 2+ guessed lines, some overlap → all yellow
+  return gLines.map(l => ({ line: l, state: "yellow" }));
+}
+
+/* ---------- RENDER: LAST GUESS ---------- */
+function chipsHTML(feedback) {
+  if (feedback.length === 0) return '<div class="chip red">—</div>';
+  return feedback.map(f => `<div class="chip ${f.state}">${f.line}</div>`).join("");
+}
+
+function renderLastGuess(guess, feedback, direction, stops) {
+  document.getElementById("lg-name").textContent = guess.name;
+  document.getElementById("lg-chips").innerHTML = chipsHTML(feedback);
+  document.getElementById("lg-arrow").textContent = direction;
+  document.getElementById("lg-stops").textContent = stops;
+}
+
+/* ---------- RENDER: HISTORY ---------- */
+function histCollapsedHTML(g) {
+  const bars = g.feedback.length
+    ? g.feedback.map(f => `<div class="hist-bar ${f.state}"></div>`).join("")
+    : '<div class="hist-bar red"></div>';
+  return `
+    <div class="hist-top">
+      <span class="hist-name">${g.station.name}</span>
+      <span class="hist-right">
+        <span class="arrow">${g.direction}</span>
+        <span class="stops">${g.stopsBucket}</span>
+      </span>
+    </div>
+    <div class="hist-bars">${bars}</div>
+  `;
+}
+
+function histExpandedHTML(g) {
+  return `
+    <div class="lg-top">
+      <span>Guess</span>
+      <span class="right">
+        <span>Direction</span>
+        <span>Stops</span>
+      </span>
+    </div>
+    <div class="lg-name">${g.station.name}</div>
+    <div class="lg-row">
+      <div class="chips">${chipsHTML(g.feedback)}</div>
+      <div style="display:flex; gap:24px; align-items:center;">
+        <span class="lg-arrow" style="min-width:44px; text-align:center;">${g.direction}</span>
+        <span class="lg-stops" style="min-width:44px; text-align:center;">${g.stopsBucket}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderHistory() {
+  const list = document.getElementById("history-list");
+  if (guesses.length === 0) {
+    list.innerHTML = '<div class="empty-hist">No guesses yet. Type a station name below.</div>';
+    return;
+  }
+  list.innerHTML = "";
+  guesses.forEach(g => {
+    const item = document.createElement("div");
+    item.className = "hist-item";
+    item.dataset.id = g.station.id;
+    const isExpanded = expandedId === g.station.id;
+    item.innerHTML = isExpanded ? histExpandedHTML(g) : histCollapsedHTML(g);
+    item.addEventListener("click", () => {
+      expandedId = (expandedId === g.station.id) ? null : g.station.id;
+      renderHistory();
+    });
+    list.appendChild(item);
+  });
+}
+
+/* ---------- SUBMIT ---------- */
+function submitGuess(station) {
+  if (gameOver || !station) return;
+  if (guesses.some(g => g.station.id === station.id)) {
+    showToast("Already guessed", false);
+    return;
+  }
+  const feedback = lineFeedback(station, answer);
+  const direction = (station.id === answer.id) ? "–" : direction8(station, answer);
+  const rawStops = stopsBetween(station.name, answer.name);
+  const stopsBucket = bucketStops(rawStops);
+
+  guesses.push({ station, feedback, direction, stopsBucket });
+  renderLastGuess(station, feedback, direction, stopsBucket);
+  renderHistory();
+
+  document.getElementById("station-input").value = "";
+  document.getElementById("next-btn").disabled = true;
+  hideSuggestions();
+
+  const remaining = MAX_GUESSES - guesses.length;
+  document.getElementById("guesses-left").textContent = remaining;
+
+  if (station.id === answer.id) {
+    gameOver = true;
+    document.getElementById("station-input").disabled = true;
+    document.getElementById("lg-name").classList.add("win");
+    setTimeout(() => showWinModal(guesses.length), 600);
+  } else if (remaining <= 0) {
+    gameOver = true;
+    document.getElementById("station-input").disabled = true;
+    setTimeout(showLoseModal, 600);
+  }
+}
+
+/* ---------- AUTOCOMPLETE ---------- */
+const input = document.getElementById("station-input");
+const suggBox = document.getElementById("suggestions");
+let activeIdx = -1;
+let currentSugg = [];
+
+function getSuggestions(query) {
+  if (!query) return [];
+  const q = query.toLowerCase().trim();
+  const pool = STATIONS.filter(s => !s.tram && s.lines.length > 0);
+  const starts = pool.filter(s => norm(s.name).toLowerCase().startsWith(q));
+  const contains = pool.filter(s =>
+    !norm(s.name).toLowerCase().startsWith(q) &&
+    norm(s.name).toLowerCase().includes(q)
+  );
+  return starts.concat(contains).slice(0, 8);
+}
+
+function renderSuggestions(list) {
+  currentSugg = list;
+  activeIdx = -1;
+  if (list.length === 0) { hideSuggestions(); return; }
+  suggBox.innerHTML = "";
+  list.forEach((s) => {
+    const el = document.createElement("div");
+    el.className = "suggestion";
+    el.textContent = norm(s.name);
+    el.addEventListener("mousedown", e => {
+      e.preventDefault();
+      input.value = norm(s.name);
+      suggBox.classList.remove("open");
+      submitGuess(s);
+    });
+    suggBox.appendChild(el);
+  });
+  suggBox.classList.add("open");
+}
+
+function hideSuggestions() {
+  suggBox.classList.remove("open");
+  suggBox.innerHTML = "";
+  currentSugg = [];
+  activeIdx = -1;
+}
+
+input.addEventListener("input", () => {
+  const q = input.value;
+  if (!q.trim()) { hideSuggestions(); document.getElementById("next-btn").disabled = true; return; }
+  renderSuggestions(getSuggestions(q));
+  const exact = STATIONS.find(s => norm(s.name).toLowerCase() === q.toLowerCase().trim());
+  document.getElementById("next-btn").disabled = !exact;
+});
+
+input.addEventListener("keydown", e => {
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    if (!currentSugg.length) return;
+    activeIdx = (activeIdx + 1) % currentSugg.length; updateActive();
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    if (!currentSugg.length) return;
+    activeIdx = (activeIdx - 1 + currentSugg.length) % currentSugg.length; updateActive();
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    let chosen = null;
+    if (activeIdx >= 0 && currentSugg[activeIdx]) chosen = currentSugg[activeIdx];
+    else if (currentSugg.length) chosen = currentSugg[0];
+    else {
+      const q = input.value.toLowerCase().trim();
+      chosen = STATIONS.find(s => norm(s.name).toLowerCase() === q);
+    }
+    if (chosen) submitGuess(chosen);
+  } else if (e.key === "Escape") hideSuggestions();
+});
+
+function updateActive() {
+  [...suggBox.children].forEach((el, i) => el.classList.toggle("active", i === activeIdx));
+}
+
+document.getElementById("next-btn").addEventListener("click", () => {
+  const q = input.value.toLowerCase().trim();
+  const chosen = STATIONS.find(s => norm(s.name).toLowerCase() === q);
+  if (chosen) submitGuess(chosen);
+});
+
+/* ---------- TOAST ---------- */
+let toastTimer;
+function showToast(msg, isWin) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "toast show " + (isWin ? "win" : "lose");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = "toast"; }, 3500);
+}
+
+/* ---------- WIN / LOSE MODALS ---------- */
+function showWinModal(guessCount) {
+  const lines = answer.lines.filter(l => l !== "CRR");
+  document.querySelector(".win-emoji").textContent = "🎉";
+  document.querySelector(".win-modal h2").textContent = "You got it!";
+  document.getElementById("win-station").textContent = answer.name;
+  document.getElementById("win-lines").innerHTML =
+    lines.map(l => `<div class="chip green" style="min-width:36px; height:36px;">${l}</div>`).join("");
+  const diffLabel = DIFFICULTY === 'hard' ? "Hard" : "Easy";
+  document.getElementById("win-stats").textContent =
+    `Solved in ${guessCount} guess${guessCount === 1 ? "" : "es"} · ${diffLabel} mode.`;
+  document.getElementById("win-modal-bg").classList.add("open");
+}
+
+function showLoseModal() {
+  const lines = answer.lines.filter(l => l !== "CRR");
+  document.querySelector(".win-emoji").textContent = "😔";
+  document.querySelector(".win-modal h2").textContent = "Out of guesses";
+  document.getElementById("win-station").textContent = answer.name;
+  document.getElementById("win-lines").innerHTML =
+    lines.map(l => `<div class="chip red" style="min-width:36px; height:36px;">${l}</div>`).join("");
+  document.getElementById("win-stats").textContent =
+    `The answer was ${answer.name}. Better luck next time!`;
+  document.getElementById("win-modal-bg").classList.add("open");
+}
+
+document.getElementById("win-play-again").addEventListener("click", () => {
+  document.getElementById("win-modal-bg").classList.remove("open");
+  newGame();
+});
+document.getElementById("win-modal-bg").addEventListener("click", e => {
+  if (e.target.id === "win-modal-bg") e.currentTarget.classList.remove("open");
+});
+
+/* ---------- DIFFICULTY TOGGLE ---------- */
+function setDifficulty(mode, silent) {
+  if (mode !== 'easy' && mode !== 'hard') return;
+  if (DIFFICULTY === mode && !silent) return;
+  DIFFICULTY = mode;
+  try { localStorage.setItem('traindle-difficulty', mode); } catch(e) {}
+  document.querySelectorAll("#difficulty-toggle button").forEach(b => {
+    b.classList.toggle("active", b.dataset.mode === mode);
+  });
+  if (!silent) {
+    newGame();
+    showToast(mode === 'hard' ? "Hard mode — good luck" : "Easy mode", mode !== 'hard');
+  }
+}
+
+document.querySelectorAll("#difficulty-toggle button").forEach(b => {
+  b.addEventListener("click", () => setDifficulty(b.dataset.mode, false));
+});
+
+/* ---------- STANDARD MODAL ---------- */
+function openModal(html) {
+  document.getElementById("modal-content").innerHTML = html +
+    '<button class="close" onclick="document.getElementById(\'modal-bg\').classList.remove(\'open\')">Close</button>';
+  document.getElementById("modal-bg").classList.add("open");
+}
+document.getElementById("modal-bg").addEventListener("click", e => {
+  if (e.target.id === "modal-bg") e.currentTarget.classList.remove("open");
+});
+
+document.getElementById("btn-results").addEventListener("click", () => {
+  if (!answer) return;
+  const lines = answer.lines.filter(l => l !== "CRR").join(", ") || "—";
+  const diffLabel = DIFFICULTY === 'hard' ? "Hard" : "Easy";
+  openModal(`
+    <h2>Results</h2>
+    <p><b>Station:</b> ${answer.name}</p>
+    <p><b>Lines:</b> ${lines}</p>
+    <p><b>Difficulty:</b> ${diffLabel}</p>
+    <p><b>Guesses used:</b> ${guesses.length} / ${MAX_GUESSES}</p>
+    <p><b>Status:</b> ${guesses.some(g => g.station.id === answer.id) ? "Solved ✅" : (guesses.length >= MAX_GUESSES ? "Failed ❌" : "In progress")}</p>
+    <button class="close" style="background:#555;" onclick="newGame(); document.getElementById('modal-bg').classList.remove('open');">New Game</button>
+  `);
+});
+
+function openHelpModal() {
+  const chip = (state, text) => `<div class="chip ${state}">${text}</div>`;
+  openModal(`
+    <h2>How to play</h2>
+    <p>Guess the secret Brisbane train station in ${MAX_GUESSES} tries. Each guess shows line chips, a direction arrow, and a bucketed stop count.</p>
+
+    <h3>Direction &amp; stops</h3>
+    <ul>
+      <li><b>Direction</b> — 8-way compass arrow from your guess toward the answer.</li>
+      <li><b>Stops</b> — bucketed network distance (0, exact under 10, then 10-20, 20-30, ...).</li>
+    </ul>
+
+    <h3>Easy mode — line chips</h3>
+    <p>A line chip is coloured based on whether <i>that specific line</i> is on the answer.</p>
+    <div class="example-row">${chip("green","T4")}<span class="example-label">On the answer</span></div>
+    <div class="example-row">${chip("yellow","T2")}<span class="example-label">Not on the answer, but this guess has another line that is</span></div>
+    <div class="example-row">${chip("red","T2")}<span class="example-label">No lines on this guess are on the answer</span></div>
+
+    <h3>Hard mode — line chips</h3>
+    <p>You don't get told which specific line is correct — only whether <i>at least one</i> of your guessed lines is on the answer.</p>
+    <ul>
+      <li><b>All red</b> — none of your guessed lines are on the answer.</li>
+      <li><b>Single green chip</b> — your guess is on exactly one line, and it's the right one. You've pinned the line.</li>
+      <li><b>All yellow</b> — your guess has 2+ lines, and at least one is right. You know the line is among them, but not which.</li>
+      <li><b>Exact station match</b> — all chips turn green on the winning guess.</li>
+    </ul>
+    <div class="example-row">${chip("green","T4")}<span class="example-label">Cleveland (T4 only) vs an answer on T4</span></div>
+    <div class="example-row">${chip("yellow","T2")}${chip("yellow","T4")}<span class="example-label">A T2+T4 guess vs an answer on T4</span></div>
+    <div class="example-row">${chip("red","T2")}<span class="example-label">A T2-only guess vs an answer not on T2</span></div>
+
+    <p>Tap any past guess in the History list to expand it. Switch difficulty any time from the toggle at the top.</p>
+    <p style="color:#888; font-size:12px;">* Heavy rail lines T1–T6 only. Free play mode.</p>
+  `);
+}
+
+document.getElementById("btn-help").addEventListener("click", openHelpModal);
+
+/* ---------- MAP MODAL ---------- */
+const mapModal = document.getElementById("map-modal-bg");
+const mapViewport = document.getElementById("map-viewport");
+const mapImg = document.getElementById("map-img");
+
+let mapScale = 1;
+let mapTx = 0, mapTy = 0;
+let mapFitScale = 1;
+let mapNaturalW = 0, mapNaturalH = 0;
+let isDragging = false, dragStartX = 0, dragStartY = 0, dragStartTx = 0, dragStartTy = 0;
+let pinchStartDist = 0, pinchStartScale = 1;
+let lastTap = 0;
+
+function applyMapTransform() {
+  mapImg.style.transform =
+    `translate(calc(-50% + ${mapTx}px), calc(-50% + ${mapTy}px)) scale(${mapScale})`;
+}
+
+function fitMap() {
+  if (!mapNaturalW || !mapNaturalH) return;
+  const vw = mapViewport.clientWidth;
+  const vh = mapViewport.clientHeight;
+  mapFitScale = Math.min(vw / mapNaturalW, vh / mapNaturalH) * 0.95;
+  mapScale = mapFitScale;
+  mapTx = 0; mapTy = 0;
+  applyMapTransform();
+}
+
+function mapLoaded() {
+  mapNaturalW = mapImg.naturalWidth;
+  mapNaturalH = mapImg.naturalHeight;
+  fitMap();
+}
+
+if (mapImg.complete && mapImg.naturalWidth) mapLoaded();
+else mapImg.addEventListener("load", mapLoaded);
+
+document.getElementById("btn-map").addEventListener("click", () => {
+  mapModal.classList.add("open");
+  setTimeout(fitMap, 50);
+});
+document.getElementById("map-close").addEventListener("click", () => {
+  mapModal.classList.remove("open");
+});
+
+document.getElementById("map-zoom-in").addEventListener("click", () => {
+  mapScale = Math.min(mapScale * 1.4, mapFitScale * 12);
+  applyMapTransform();
+});
+document.getElementById("map-zoom-out").addEventListener("click", () => {
+  mapScale = Math.max(mapScale / 1.4, mapFitScale * 0.5);
+  applyMapTransform();
+});
+document.getElementById("map-reset").addEventListener("click", fitMap);
+
+mapViewport.addEventListener("wheel", e => {
+  e.preventDefault();
+  const factor = e.deltaY < 0 ? 1.15 : 1/1.15;
+  const newScale = Math.min(Math.max(mapScale * factor, mapFitScale * 0.5), mapFitScale * 12);
+  const rect = mapViewport.getBoundingClientRect();
+  const cx = e.clientX - rect.left - rect.width / 2;
+  const cy = e.clientY - rect.top - rect.height / 2;
+  const ratio = newScale / mapScale;
+  mapTx = cx - ratio * (cx - mapTx);
+  mapTy = cy - ratio * (cy - mapTy);
+  mapScale = newScale;
+  applyMapTransform();
+}, { passive: false });
+
+mapViewport.addEventListener("mousedown", e => {
+  isDragging = true;
+  mapViewport.classList.add("dragging");
+  dragStartX = e.clientX; dragStartY = e.clientY;
+  dragStartTx = mapTx; dragStartTy = mapTy;
+});
+window.addEventListener("mousemove", e => {
+  if (!isDragging) return;
+  mapTx = dragStartTx + (e.clientX - dragStartX);
+  mapTy = dragStartTy + (e.clientY - dragStartY);
+  applyMapTransform();
+});
+window.addEventListener("mouseup", () => {
+  isDragging = false;
+  mapViewport.classList.remove("dragging");
+});
+
+mapViewport.addEventListener("touchstart", e => {
+  if (e.touches.length === 1) {
+    const now = Date.now();
+    if (now - lastTap < 300) { fitMap(); lastTap = 0; return; }
+    lastTap = now;
+    isDragging = true;
+    dragStartX = e.touches[0].clientX;
+    dragStartY = e.touches[0].clientY;
+    dragStartTx = mapTx; dragStartTy = mapTy;
+  } else if (e.touches.length === 2) {
+    isDragging = false;
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    pinchStartDist = Math.hypot(dx, dy);
+    pinchStartScale = mapScale;
+  }
+}, { passive: true });
+
+mapViewport.addEventListener("touchmove", e => {
+  if (e.touches.length === 1 && isDragging) {
+    mapTx = dragStartTx + (e.touches[0].clientX - dragStartX);
+    mapTy = dragStartTy + (e.touches[0].clientY - dragStartY);
+    applyMapTransform();
+  } else if (e.touches.length === 2) {
+    e.preventDefault();
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    const dist = Math.hypot(dx, dy);
+    const newScale = Math.min(
+      Math.max(pinchStartScale * (dist / pinchStartDist), mapFitScale * 0.5),
+      mapFitScale * 12
+    );
+    mapScale = newScale;
+    applyMapTransform();
+  }
+}, { passive: false });
+
+mapViewport.addEventListener("touchend", () => { isDragging = false; });
+
+window.addEventListener("resize", () => {
+  if (mapModal.classList.contains("open")) fitMap();
+});
+
+/* ---------- INIT ---------- */
+(function init() {
+  // Restore difficulty
+  let saved = 'easy';
+  try { saved = localStorage.getItem('traindle-difficulty') || 'easy'; } catch(e) {}
+  DIFFICULTY = (saved === 'hard') ? 'hard' : 'easy';
+  document.querySelectorAll("#difficulty-toggle button").forEach(function(b) {
+    b.classList.toggle("active", b.dataset.mode === DIFFICULTY);
+  });
+
+  // Start the game
+  newGame();
+
+  // Show the how-to-play on first ever visit (or after clearing the flag)
+  var seenHelp = false;
+  try { seenHelp = localStorage.getItem(HELP_SEEN_KEY) === '1'; } catch(e) {}
+
+  if (!seenHelp) {
+    // Mark as seen immediately so a refresh mid-read doesn't re-trigger it
+    try { localStorage.setItem(HELP_SEEN_KEY, '1'); } catch(e) {}
+    setTimeout(function() {
+      openHelpModal();
+    }, 250);
+  }
+})();
+</script>
+</body>
+</html>

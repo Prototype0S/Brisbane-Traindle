@@ -1,0 +1,192 @@
+﻿OBJECTID,Name,Operational Status,Usage,x,y
+1,Boondall,Operational,Passenger Stop,506699.9205,6975188.5811
+2,Bowen Hills,Operational,Passenger Stop,503713.071,6964258.2858
+3,Buranda,Operational,Passenger Stop,504005.2563,6958566.5591
+4,Cooroy,Operational,Passenger Stop,491141.616,7078064.3754
+5,Dakabin,Operational,Passenger Stop,497601.8263,6988043.0835
+6,Domestic Airport,Operational,Passenger Stop,511756.837,6970908.0979
+7,Dutton Park,Operational,Passenger Stop,502806.0624,6958103.055
+8,Geebung,Operational,Passenger Stop,504671.1454,6972719.9022
+9,Glass House Mountains,Operational,Passenger Stop,495667.2957,7024708.3561
+10,Goodna,Operational,Passenger Stop,490302.0849,6946132.8687
+11,Gympie North,Operational,Passenger Stop,468265.8187,7106656.331
+12,International Airport,Operational,Passenger Stop,510735.4811,6968952.4664
+13,Karrabin,Operational,Passenger Stop,471290.3332,6946585.9553
+14,Laidley,Operational,Passenger Stop,440131.4336,6943830.9226
+15,Lindum,Operational,Passenger Stop,514309.6762,6964596.938
+16,Milton,Operational,Passenger Stop,500513.8609,6961636.3856
+17,Mitchelton,Operational,Passenger Stop,497635.0798,6967969.9442
+18,Mooloolah,Operational,Passenger Stop,496348.314,7039479.4597
+19,Narangba,Operational,Passenger Stop,496036.0422,6991158.8778
+20,Norman Park,Operational,Passenger Stop,506159.4933,6960212.5497
+21,North Boondall,Operational,Passenger Stop,506004.5124,6976050.2452
+22,Woolloongabba,Under Construction,Passenger Stop,503329.5304,6959835.431
+23,Roma Street,Under Construction,Passenger Stop,501869.4758,6961931.0144
+24,Nundah,Operational,Passenger Stop,506132.254,6969176.1
+25,Oxford Park,Operational,Passenger Stop,496950.5836,6968766.5311
+26,Helensvale,Operational,Passenger Stop,533391.5649,6910997.8689
+27,Parkwood,Operational,Passenger Stop,534152.2399,6908072.2959
+28,Indooroopilly,Operational,Passenger Stop,497650.9883,6957931.9606
+29,Kippa-Ring,Operational,Passenger Stop,508174.7189,6988604.2374
+30,Loganlea,Operational,Passenger Stop,513613.1832,6939262.7935
+31,Lota,Operational,Passenger Stop,518631.6866,6961479.7512
+32,Manly,Operational,Passenger Stop,517809.8468,6962962.0382
+33,Varsity Lakes,Operational,Passenger Stop,539222.6142,6891978.8624
+34,Landsborough,Operational,Passenger Stop,496657.5013,7034812.1263
+35,Albert Street,Under Construction,Passenger Stop,502692.1417,6961311.2226
+36,Surfers Paradise North,Operational,Passenger Stop,542206.4251,6903542.8837
+37,Nerang Street,Operational,Passenger Stop,540172.9618,6905979.8803
+38,Cypress Avenue,Operational,Passenger Stop,542196.1056,6903110.9405
+39,Cavill Avenue,Operational,Passenger Stop,542117.2365,6902547.855
+40,Florida Gardens,Operational,Passenger Stop,542197.3661,6900799.9888
+41,Surfers Paradise,Operational,Passenger Stop,542183.0173,6902045.1335
+42,Broadbeach South,Operational,Passenger Stop,542372.5157,6898773.2289
+43,Southport,Operational,Passenger Stop,540674.7317,6906293.4649
+44,Northcliffe,Operational,Passenger Stop,542226.6153,6901610.2858
+45,Broadbeach North,Operational,Passenger Stop,542244.1033,6899597.8764
+46,Broadwater Parklands,Operational,Passenger Stop,541185.5683,6905657.689
+47,Gold Coast University Hospital,Operational,Passenger Stop,537460.0103,6907076.0881
+48,Griffith University,Operational,Passenger Stop,537838.2246,6906801.0073
+49,Southport South,Operational,Passenger Stop,540864.3919,6905768.2342
+50,Queen Street,Operational,Passenger Stop,538791.6183,6906042.024
+51,Main Beach,Operational,Passenger Stop,541641.6209,6904709.5205
+52,Walloon,Operational,Passenger Stop,467222.6828,6946247.8806
+53,Wooloowin,Operational,Passenger Stop,504286.0706,6967043.146
+54,Wynnum,Operational,Passenger Stop,516408.9396,6964844.4774
+55,Yandina,Operational,Passenger Stop,495838.365,7062188.6819
+56,Caboolture,Operational,Passenger Stop,495408.02,7004393.8829
+57,Cannon Hill,Operational,Passenger Stop,508781.5636,6962022.3227
+58,Chelmer,Operational,Passenger Stop,497312.0469,6956852.9072
+59,Coopers Plains,Operational,Passenger Stop,503550.5342,6950709.3965
+60,Coorparoo,Operational,Passenger Stop,505458.3822,6959312.7343
+61,Ormiston,Operational,Passenger Stop,525262.9043,6956543.8065
+62,Ormeau,Operational,Passenger Stop,527814.4657,6925018.7884
+63,Woombye,Operational,Passenger Stop,496295.1334,7051163.9957
+64,Springfield Central,Operational,Passenger Stop,490416.3209,6938867.3658
+65,Dinmore,Operational,Passenger Stop,483573.3092,6947514.1008
+66,East Ipswich,Operational,Passenger Stop,477798.4569,6945980.9394
+67,Edens Landing,Operational,Passenger Stop,516850.5195,6936225.7878
+68,Gailes,Operational,Passenger Stop,492013.1379,6946855.6021
+69,Grovely,Operational,Passenger Stop,496301.6314,6968767.627
+70,Hemmant,Operational,Passenger Stop,512593.5684,6964004.9395
+71,Ipswich,Operational,Passenger Stop,476385.3761,6945651.8469
+72,Keperra,Operational,Passenger Stop,495718.6501,6968247.7808
+73,Lawnton,Operational,Passenger Stop,498110.0783,6982381.8958
+74,Murarrie,Operational,Passenger Stop,510431.0413,6962079.5165
+75,Northgate,Operational,Passenger Stop,506844.5401,6970050.1077
+76,Nudgee,Operational,Passenger Stop,508249.4629,6973011.9972
+77,Oxley,Operational,Passenger Stop,497407.2585,6952400.1243
+78,Pomona,Operational,Passenger Stop,485703.7032,7083764.8177
+79,Redbank,Operational,Passenger Stop,487404.1091,6947158.4898
+80,Riverview,Operational,Passenger Stop,485228.2112,6947660.2708
+81,Rocklea,Operational,Passenger Stop,501400.8189,6953227.9212
+82,Runcorn,Operational,Passenger Stop,506790.7461,6947919.2079
+83,Sandgate,Operational,Passenger Stop,506841.8604,6977874.2114
+84,South Bank,Operational,Passenger Stop,502281.3301,6960193.6138
+85,Thagoona,Operational,Passenger Stop,463477.5117,6944081.9114
+86,Toombul,Operational,Passenger Stop,505816.5226,6968405.2135
+87,Exhibition,Operational,Passenger Stop,503073.0365,6963723.1345
+88,Parkwood East,Operational,Passenger Stop,535868.7759,6906840.7782
+89,Toowong,Operational,Passenger Stop,499319.1685,6959814.7629
+90,Trinder Park,Operational,Passenger Stop,509657.8567,6943583.9905
+91,Virginia,Operational,Passenger Stop,506170.5069,6971234.8783
+92,Wellington Point,Operational,Passenger Stop,523904.7224,6958782.9421
+93,Wulkuraka,Operational,Passenger Stop,473634.0149,6945571.44
+94,Wynnum North,Operational,Passenger Stop,515682.076,6965121.0137
+95,Beerwah,Operational,Passenger Stop,495867.345,7029389.5261
+96,Booval,Operational,Passenger Stop,479223.3002,6946052.4587
+97,Fortitude Valley,Operational,Passenger Stop,503353.6307,6963076.18
+98,Moorooka,Operational,Passenger Stop,501374.175,6954231.8124
+99,Morayfield,Operational,Passenger Stop,495303.7771,7001352.6307
+100,Rosewood,Operational,Passenger Stop,459815.7736,6942261.5934
+101,Sherwood,Operational,Passenger Stop,497973.9518,6954747.7883
+102,South Brisbane,Operational,Passenger Stop,501834.4222,6960940.1461
+103,Strathpine,Operational,Passenger Stop,498961.2208,6979115.9022
+104,Sunnybank,Operational,Passenger Stop,505348.9683,6949229.9843
+105,Nerang,Operational,Passenger Stop,534425.4912,6903399.6728
+106,Newmarket,Operational,Passenger Stop,501047.7739,6965636.5115
+107,Elimbah,Operational,Passenger Stop,494628.3168,7012346.8033
+108,Eumundi,Operational,Passenger Stop,495522.7069,7071102.9828
+109,Ferny Grove,Operational,Passenger Stop,493615.2991,6969090.4606
+110,Helidon,Operational,Passenger Stop,413431.1171,6952562.4164
+111,Hendra,Operational,Passenger Stop,506186.4275,6966812.3868
+112,Darra,Operational,Passenger Stop,495299.7935,6950887.1791
+113,Richlands,Operational,Passenger Stop,494755.0906,6947526.5492
+114,Springfield,Operational,Passenger Stop,492316.8666,6940458.3712
+115,Murrumba Downs,Operational,Passenger Stop,501171.1341,6985616.6641
+116,Mango Hill,Operational,Passenger Stop,502735.662,6986272.5783
+117,Mango Hill East,Operational,Passenger Stop,503573.3057,6987719.6498
+118,Rothwell,Operational,Passenger Stop,504792.3699,6988766.0581
+119,Kallangur,Operational,Passenger Stop,500028.3604,6985146.1973
+120,Bald Hills,Operational,Passenger Stop,501084.8394,6978026.3662
+121,Yeerongpilly,Operational,Passenger Stop,501398.0267,6955428.6303
+122,Alderley,Operational,Passenger Stop,500083.2242,6966688.4449
+123,Banoon,Operational,Passenger Stop,504608.988,6949691.3041
+124,Beenleigh,Operational,Passenger Stop,520182.2289,6934067.0993
+125,Bethania,Operational,Passenger Stop,515645.7397,6937305.0305
+126,Burpengary,Operational,Passenger Stop,495765.6386,6995613.3079
+127,Carseldine,Operational,Passenger Stop,502851.2392,6975103.7853
+128,Cooran,Operational,Passenger Stop,482303.8965,7087313.3287
+129,Eagle Junction,Operational,Passenger Stop,504910.8696,6967554.1521
+130,Bray Park,Operational,Passenger Stop,498631.5584,6980381.5151
+131,Bundamba,Operational,Passenger Stop,480743.8508,6946263.8648
+132,Central,Operational,Passenger Stop,502561.7703,6961984.6008
+133,Clayfield,Operational,Passenger Stop,505702.4017,6967247.543
+134,Corinda,Operational,Passenger Stop,498035.3654,6953860.8261
+135,Deagon,Operational,Passenger Stop,506255.5786,6977254.4633
+136,Doomben,Operational,Passenger Stop,507368.3086,6965782.8849
+137,Ebbw Vale,Operational,Passenger Stop,482438.3152,6946721.5728
+138,The Workshops Rail Museum,Operational,Passenger Stop,476289.3589,6947230.5731
+139,Enoggera,Operational,Passenger Stop,499252.544,6967016.0125
+140,Eudlo,Operational,Passenger Stop,495706.7905,7043930.1239
+141,Fairfield,Operational,Passenger Stop,502757.7843,6957100.8997
+142,Fruitgrove,Operational,Passenger Stop,507868.4843,6947299.7513
+143,Gatton,Operational,Passenger Stop,428684.6895,6951940.6
+144,Gaythorne,Operational,Passenger Stop,498521.7297,6967127.4322
+145,Graceville,Operational,Passenger Stop,497616.467,6955907.2384
+146,Helensvale,Operational,Passenger Stop,533362.029,6911008.9729
+147,Holmview,Operational,Passenger Stop,518493.2674,6934960.2779
+148,Kuraby,Operational,Passenger Stop,509027.2333,6946553.9177
+149,Morningside,Operational,Passenger Stop,506865.811,6961405.6872
+150,Boggo Road/Park Road,Operational,Passenger Stop,503041.7807,6958894.928
+151,Ascot,Operational,Passenger Stop,506268.4401,6965985.2555
+152,Auchenflower,Operational,Passenger Stop,499674.1787,6960788.0855
+153,Banyo,Operational,Passenger Stop,507654.7842,6972069.9356
+154,Beerburrum,Operational,Passenger Stop,495954.1557,7018013.5109
+155,Bindha,Operational,Passenger Stop,507184.8922,6971148.8175
+156,Birkdale,Operational,Passenger Stop,521606.3202,6958824.3156
+157,Petrie,Operational,Passenger Stop,498212.0493,6983851.577
+158,Salisbury,Operational,Passenger Stop,502240.2564,6952218.2576
+159,Sunshine,Operational,Passenger Stop,505565.8959,6971948.7715
+160,Taringa,Operational,Passenger Stop,498186.5216,6958940.4197
+161,Thomas Street,Operational,Passenger Stop,474886.1255,6945445.8661
+162,Wilston,Operational,Passenger Stop,501902.3698,6965254.3767
+163,Windsor,Operational,Passenger Stop,502868.3027,6965349.9466
+164,Albion,Operational,Passenger Stop,503982.6869,6966030.3489
+165,Altandi,Operational,Passenger Stop,506291.8872,6949008.0533
+166,Roma Street,Operational,Passenger Stop,501900.1984,6962079.0387
+167,Kingston,Operational,Passenger Stop,511673.0822,6940755.0532
+168,Nambour,Operational,Passenger Stop,495838.7988,7055066.8851
+169,Robina,Operational,Passenger Stop,537147.3739,6894842.7582
+170,Shorncliffe,Operational,Passenger Stop,507955.8696,6977332.7921
+171,Thorneside,Operational,Passenger Stop,519042.0282,6959714.3752
+172,Traveston,Operational,Passenger Stop,478337.0226,7088875.042
+173,Wacol,Operational,Passenger Stop,492527.0222,6948308.4217
+174,Wynnum Central,Operational,Passenger Stop,516830.2618,6964212.5374
+175,Yeronga,Operational,Passenger Stop,501660.3925,6956180.2332
+176,Zillmere,Operational,Passenger Stop,503632.4372,6973820.1483
+177,Cleveland,Operational,Passenger Stop,526278.9788,6955473.97
+178,Coomera,Operational,Passenger Stop,531221.3996,6919115.5833
+179,Woodridge,Operational,Passenger Stop,510231.9857,6942887.3361
+180,Palmwoods,Operational,Passenger Stop,496091.1577,7048045.5585
+181,Pimpama,Operational,Passenger Stop,529203.4006,6923124.3355
+182,Burleigh Heads,Operational,Passenger Stop,544494.2647,6892753.0739
+183,Second Avenue,Operational,Passenger Stop,544054.5784,6893379.8011
+184,Christine Avenue,Operational,Passenger Stop,543754.3531,6894314.9438
+185,Miami,Operational,Passenger Stop,543428.7773,6895075.3864
+186,Miami North,Operational,Passenger Stop,543118.937,6895508.958
+187,Nobby Beach,Operational,Passenger Stop,543025.8312,6896128.2948
+188,Mermaid Beach South,Operational,Passenger Stop,542888.0903,6897107.0931
+189,Mermaid Beach,Operational,Passenger Stop,542684.9065,6898048.3461
+190,Hope Island,Operational,Passenger Stop,532610.4347,6916061.1281
+191,Merrimac,Under Construction,Passenger Stop,535682.9545,6897318.6045
