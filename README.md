@@ -5,7 +5,7 @@
 ## What it is:
 Guess the Brisbane train station in 8 tries! Each guess reveals which lines it's on, the direction of the answer, and roughly how many stops away it is. There is an Easy and Hard option, but the help section inside the game is always there to help you through it! If you download the seq-network-map.png, you get access to a proper map tool that you can use to help you through the game, although a seasoned player can get their way through without it!
 ## How to play:
-- Download the .html and download the [network map](https://translink.widen.net/s/lsqgxrsw82/260907-seq-network-map) and rename it to **seq-network-map.png**.
+- Download the .html and download the [network map](https://translink.widen.net/s/lsqgxrsw82/260907-seq-network-map) and rename/convert it to **seq-network-map.png**.
 - Make sure they're in the same folder and you're done!
 
 ## Licensing:
